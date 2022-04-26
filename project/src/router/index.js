@@ -1,19 +1,34 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
+import { AppRoute } from '@/const';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
+    path: AppRoute.Home,
     name: 'Home',
-    component: Home,
+    component: () => import('@/views/Home.vue'),
+    children: [
+      {
+        path: AppRoute.Home,
+        component: () => import('@/components/EmptyList/EmptyList.vue'),
+      },
+      {
+        path: AppRoute.Posts,
+        component: () => import('@/components/PostsList/PostsList.vue'),
+      },
+    ],
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/About.vue'),
+    path: AppRoute.Comments,
+    name: 'Comments',
+    component: () => import('@/views/Comments.vue'),
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('@/components/NotFoundScreen/NotFoundScreen.vue'),
   },
 ];
 
