@@ -5,6 +5,7 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
+        class="align-self-center mx-4"
         v-bind="attrs"
         v-on="on"
       >
@@ -25,14 +26,14 @@
           <v-text-field
             class="mb-5"
             v-model="title"
-            :rules="[rules.length(25), rules.required]"
+            :rules="[rules.checkLength(25), rules.checkRequired]"
             counter="25"
             label="Title"
           />
 
           <v-textarea
             v-model="body"
-            :rules="[rules.length(200), rules.required]"
+            :rules="[rules.checkLength(200), rules.checkRequired]"
             maxlength="200"
             counter
             auto-grow
@@ -45,7 +46,7 @@
         <v-card-actions>
           <v-btn
             text
-            @click="$refs.form.reset()"
+            @click="onReset"
           >
             Clear
           </v-btn>
@@ -57,7 +58,7 @@
             color="deep-purple accent-4"
             depressed
             :disabled="!form"
-            :loading="isLoading"
+            :loading="submitting"
             @click="onSubmit"
           >
             Submit
@@ -86,25 +87,28 @@
 </template>
 
 <script>
+import _get from 'lodash/get';
+import { checkLength, checkRequired } from '@/utils/validators';
+
 export default {
   name: 'new-comment',
+
   data: () => ({
     dialog: false,
     form: false,
     title: '',
     body: '',
     rules: {
-      length: (len) => (v) => (v || '').length <= len || `Invalid character length, max ${len}`,
-      required: (v) => !!v?.trim() || 'This field is required',
+      checkLength,
+      checkRequired,
     },
+    submitting: false,
   }),
-  computed: {
-    isLoading() {
-      return this.$store.state.comments.newCommentLoading;
-    },
-  },
+
   methods: {
     async onSubmit() {
+      this.submitting = true;
+
       try {
         await this.$store.dispatch('postComment', {
           title: this.title,
@@ -118,6 +122,15 @@ export default {
         this.$vToastify.success('Новый комментарий добавлен!');
       } catch (error) {
         this.$vToastify.error(error.message);
+      }
+
+      this.submitting = false;
+    },
+    onReset() {
+      const resetFunc = _get(this.$refs, 'form.reset');
+
+      if (resetFunc && typeof resetFunc === 'function') {
+        resetFunc();
       }
     },
   },

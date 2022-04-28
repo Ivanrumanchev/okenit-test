@@ -2,18 +2,22 @@
   <v-list-item class="mb-2">
     <v-lazy width="100%">
       <v-card>
-        <v-card-title class="justify-space-between flex-nowrap">
-          <span class="mr-2">
-            {{ post.title }}
-          </span>
-
-          <v-chip class="align-self-start flex-shrink-0" outlined>
-            {{ author.name }}
+        <v-card-title class="d-block">
+          <v-chip
+            v-if="authorName"
+            class="float-right ml-2"
+            outlined
+          >
+            {{ authorName }}
           </v-chip>
+
+          <span v-if="title">
+            {{ title }}
+          </span>
         </v-card-title>
 
-        <v-card-text>
-          {{ post.body }}
+        <v-card-text v-if="body">
+          {{ body }}
         </v-card-text>
 
         <v-card-actions>
@@ -34,19 +38,28 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { AppRoute } from '@/const';
 
 export default ({
   name: 'post-item',
+
   props: {
-    post: Object,
+    id: Number,
+    userId: Number,
+    title: String,
+    body: String,
   },
+
   computed: {
-    author() {
-      return this.$store.getters.getUserById(this.post.userId);
+    ...mapGetters(['getUserById']),
+    authorName() {
+      const author = this.getUserById(this.userId);
+
+      return author.name;
     },
     linkUrl() {
-      return `${AppRoute.CommentsId}${this.post.id}`;
+      return `${AppRoute.CommentsId}${this.id}`;
     },
   },
 });

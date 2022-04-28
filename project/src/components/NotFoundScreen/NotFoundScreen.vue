@@ -50,11 +50,13 @@ import { AppRoute } from '@/const';
 
 export default {
   name: 'not-found-screen',
+
   data() {
     return {
       mainLinkUrl: AppRoute.Home,
     };
   },
+
   methods: {
     async onButtonClick() {
       await this.$router.push(this.mainLinkUrl);

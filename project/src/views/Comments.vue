@@ -1,18 +1,23 @@
 <template>
-  <NotFoundScreen v-if="this.$store.state.comments.notFound" />
+  <NotFoundScreen v-if="notFound" />
 
   <v-container v-else class="pt-8">
     <v-row>
-      <v-col cols="4">
+      <v-col
+        class="pr-8 pr-sm-3"
+        cols="12"
+        sm="5"
+        md="4"
+      >
         <UserInfo />
 
         <v-btn
-          small
-          text
-          rounded
           absolute
           top
           left
+          small
+          rounded
+          elevation="0"
           @click="onButtonClick"
         >
           Назад к постам
@@ -25,7 +30,11 @@
 
       <v-divider inset vertical />
 
-      <v-col cols="8">
+      <v-col
+        cols="12"
+        sm="7"
+        md="8"
+      >
         <PostInfo />
       </v-col>
     </v-row>
@@ -41,6 +50,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import _get from 'lodash/get';
 import UserInfo from '@/components/UserInfo/UserInfo.vue';
 import PostInfo from '@/components/PostInfo/PostInfo.vue';
 import CommentsList from '@/components/CommentsList/CommentsList.vue';
@@ -49,17 +60,24 @@ import { AppRoute } from '@/const';
 
 export default {
   name: 'comments',
+
   components: {
     UserInfo,
     PostInfo,
     CommentsList,
     NotFoundScreen,
   },
+
+  computed: {
+    ...mapState({
+      notFound: (state) => state.comments.notFound,
+      userId: (state) => _get(state, 'comments.currentPost.userId'),
+    }),
+  },
+
   methods: {
     onButtonClick() {
-      const id = this.$store.state.comments.currentPost?.userId;
-
-      const route = id ? `${AppRoute.PostsId}${id}` : AppRoute.AllPosts;
+      const route = this.userId ? `${AppRoute.PostsId}${this.userId}` : AppRoute.AllPosts;
 
       this.$router.push(route);
     },

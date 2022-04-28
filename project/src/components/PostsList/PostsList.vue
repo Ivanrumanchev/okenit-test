@@ -1,5 +1,10 @@
 <template>
-  <Loader v-if="loading" />
+  <v-skeleton-loader
+    v-if="loading"
+    class="mx-auto pt-10"
+    max-height="100vh"
+    type="card-avatar@2"
+  />
 
   <EmptyList
     v-else-if="posts.length === 0"
@@ -18,37 +23,38 @@
     <PostItem
       v-for="post in posts"
       :key="post.id"
-      :post="post"
+      v-bind="post"
     />
   </v-list>
 </template>
 
 <script>
-import Loader from '@/components/Loader/Loader.vue';
+import { mapState } from 'vuex';
 import PostItem from '@/components/PostItem/PostItem.vue';
 import EmptyList from '@/components/EmptyList/EmptyList.vue';
 import { EmptyMessage } from '@/const';
 
 export default ({
   name: 'posts-list',
+
   components: {
-    Loader,
     PostItem,
     EmptyList,
   },
+
   data() {
     return {
       message: EmptyMessage.Posts,
     };
   },
+
   computed: {
-    posts() {
-      return this.$store.state.posts.posts;
-    },
-    loading() {
-      return this.$store.state.posts.postsLoading;
-    },
+    ...mapState({
+      posts: (state) => state.posts.posts,
+      loading: (state) => state.posts.postsLoading,
+    }),
   },
+
   watch: {
     '$route.params.id': {
       immediate: true,

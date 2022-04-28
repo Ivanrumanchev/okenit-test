@@ -1,37 +1,72 @@
 <template>
-  <Loader v-if="loading" />
+  <v-skeleton-loader
+    v-if="loading"
+    class="mx-auto pt-10"
+    max-width="250"
+    max-height="100vh"
+    type="table-row-divider@10"
+  />
 
-  <v-list
-    v-else
-    class="overflow-auto"
-    height="100vh"
-  >
-    <v-subheader>
-      Users
-    </v-subheader>
+  <div v-else>
+    <v-btn
+      :class="['mr-3', 'drawer-button', { 'd-none': drawer }]"
+      absolute
+      top
+      right
+      small
+      rounded
+      elevation="0"
+      @click="drawer = !drawer"
+    >
+      Select user
 
-    <v-list-item-group mandatory>
-      <UserItem :user="all" />
+      <v-icon class="ml-1">
+        mdi-gesture-tap
+      </v-icon>
+    </v-btn>
 
-      <UserItem
-        v-for="user in users"
-        :key="user.id"
-        :user="user"
-      />
-    </v-list-item-group>
-  </v-list>
+    <v-navigation-drawer
+      class="drawer"
+      v-model="drawer"
+      absolute
+      mobileBreakpoint="960"
+    >
+
+      <v-list
+        class="overflow-auto"
+        height="100vh"
+      >
+        <v-subheader>
+          Users
+        </v-subheader>
+
+        <v-list-item-group mandatory>
+          <UserItem v-bind="all" />
+
+          <UserItem
+            v-for="user in users"
+            :key="user.id"
+            :id="user.id"
+            :name="user.name"
+            :website="user.website"
+          />
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+  </div>
 </template>
 
 <script>
-import Loader from '@/components/Loader/Loader.vue';
+import { mapState } from 'vuex';
 import UserItem from '@/components/UserItem/UserItem.vue';
 
 export default ({
   name: 'users-list',
+
   components: {
-    Loader,
     UserItem,
   },
+
   data() {
     return {
       all: {
@@ -39,19 +74,32 @@ export default ({
         name: 'All posts',
         website: '',
       },
+      drawer: true,
     };
   },
+
   computed: {
-    users() {
-      return this.$store.state.users.users;
-    },
-    loading() {
-      return this.$store.state.users.usersLoading;
-    },
+    ...mapState({
+      users: (state) => state.users.users,
+      loading: (state) => state.users.usersLoading,
+    }),
   },
+
   mounted() {
     this.$store.dispatch('fetchUsers');
   },
 });
 
 </script>
+
+<style scoped>
+  @media (min-width: 960px) {
+    .drawer {
+      position: relative;
+    }
+  }
+
+  .drawer-button {
+    z-index: 1000;
+  }
+</style>

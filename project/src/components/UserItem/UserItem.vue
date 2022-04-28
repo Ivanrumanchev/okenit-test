@@ -7,12 +7,12 @@
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title>
-        {{ user.name }}
+      <v-list-item-title v-if="name">
+        {{ name }}
       </v-list-item-title>
 
-      <v-list-item-subtitle>
-        {{ user.website }}
+      <v-list-item-subtitle v-if="website">
+        {{ website }}
       </v-list-item-subtitle>
     </v-list-item-content>
   </v-list-item>
@@ -23,14 +23,17 @@ import { AppRoute } from '@/const';
 
 export default ({
   name: 'user-item',
-  props: ['user'],
+
+  props: {
+    id: [String, Number],
+    name: String,
+    website: String,
+  },
+
   computed: {
     linkUrl() {
-      return `${AppRoute.PostsId}${this.user.id}`;
+      return `${AppRoute.PostsId}${this.id}`;
     },
   },
 });
 </script>
-
-<style scoped>
-</style>

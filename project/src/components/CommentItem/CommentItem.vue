@@ -3,15 +3,15 @@
     <v-lazy width="100%">
       <v-card>
         <v-card-title>
-          {{ comment.name }}
+          {{ name }}
         </v-card-title>
 
         <v-card-subtitle>
-          {{ comment.email }}
+          {{ email }}
         </v-card-subtitle>
 
         <v-card-text>
-          {{ comment.body }}
+          {{ body }}
         </v-card-text>
       </v-card>
     </v-lazy>
@@ -21,8 +21,11 @@
 <script>
 export default ({
   name: 'comment-item',
+
   props: {
-    comment: Object,
+    name: String,
+    email: String,
+    body: String,
   },
 });
 </script>

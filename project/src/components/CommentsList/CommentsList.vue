@@ -1,40 +1,45 @@
 <template>
-  <Loader v-if="loading" />
+  <v-skeleton-loader
+    v-if="loading"
+    class="mx-auto"
+    type="table-heading"
+  />
 
   <v-list v-else >
-    <v-subheader class="text-h4 my-4 d-flex justify-space-between">
-      Comments
+    <div class="my-4 d-flex justify-space-between flex-wrap">
+      <v-subheader class="text-h4" height="auto">
+        Comments
+      </v-subheader>
 
       <NewComment />
-    </v-subheader>
+    </div>
 
     <CommentItem
       v-for="comment in comments"
       :key="comment.id"
-      :comment="comment"
+      v-bind="comment"
     />
   </v-list>
 </template>
 
 <script>
-import Loader from '@/components/Loader/Loader.vue';
+import { mapState } from 'vuex';
 import CommentItem from '@/components/CommentItem/CommentItem.vue';
 import NewComment from '@/components/NewComment/NewComment.vue';
 
 export default ({
   name: 'comments-list',
+
   components: {
-    Loader,
     CommentItem,
     NewComment,
   },
+
   computed: {
-    comments() {
-      return this.$store.state.comments.comments;
-    },
-    loading() {
-      return this.$store.state.comments.commentsLoading;
-    },
+    ...mapState({
+      comments: (state) => state.comments.comments,
+      loading: (state) => state.comments.commentsLoading,
+    }),
   },
 });
 </script>

@@ -9,7 +9,6 @@ export default {
     currentUserLoading: false,
     currentPostLoading: false,
     commentsLoading: false,
-    newCommentLoading: false,
     notFound: false,
   },
   mutations: {
@@ -30,9 +29,6 @@ export default {
     },
     setCommentsLoading(state, payload) {
       state.commentsLoading = payload;
-    },
-    setNewCommentLoading(state, payload) {
-      state.newCommentLoading = payload;
     },
     addNewComment(state, payload) {
       const newComment = {
@@ -116,8 +112,6 @@ export default {
       }
     },
     async postComment({ commit }, postData) {
-      commit('setNewCommentLoading', true);
-
       try {
         const response = await fetch(`${EndPoint.Posts}`, {
           method: 'POST',
@@ -139,8 +133,6 @@ export default {
         commit('addNewComment', data);
       } catch (error) {
         throw new Error(error.message);
-      } finally {
-        commit('setNewCommentLoading', false);
       }
     },
   },

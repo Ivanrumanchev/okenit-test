@@ -13,6 +13,7 @@
       :to="linkUrl"
       class="mt-2"
       text
+      rounded
     >
       To all posts
       <v-icon class="ml-2">
@@ -27,12 +28,14 @@ import { AppRoute, EmptyMessage } from '@/const';
 
 export default ({
   name: 'empty-list',
+
   props: {
     message: {
       type: String,
       default: EmptyMessage.Start,
     },
   },
+
   data() {
     return {
       linkUrl: AppRoute.AllPosts,
