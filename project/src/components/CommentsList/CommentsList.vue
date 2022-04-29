@@ -38,8 +38,13 @@ export default ({
   computed: {
     ...mapState({
       comments: (state) => state.comments.comments,
-      loading: (state) => state.comments.commentsLoading,
+      // loading: (state) => state.comments.commentsLoading,
+      commentsLoading: (state) => state.comments.currentUserLoading,
+      postLoading: (state) => state.comments.currentPostLoading,
     }),
+    loading() {
+      return this.commentsLoading || this.postLoading;
+    },
   },
 });
 </script>
