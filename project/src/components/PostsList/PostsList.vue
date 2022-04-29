@@ -3,7 +3,7 @@
     v-if="loading"
     class="mx-auto pt-10"
     max-height="100vh"
-    type="card-avatar@2"
+    type="card-avatar@3"
   />
 
   <EmptyList

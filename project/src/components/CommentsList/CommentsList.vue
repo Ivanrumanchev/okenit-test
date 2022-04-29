@@ -1,7 +1,7 @@
 <template>
   <v-skeleton-loader
     v-if="loading"
-    class="mx-auto"
+    class="mx-auto mt-6"
     type="table-heading"
   />
 
